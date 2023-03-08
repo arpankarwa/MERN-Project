@@ -27,23 +27,7 @@ mysqlConn.connect((err) => {
 
 // --------------------------------------------------------------------------------------------------------
 
-app.get('/getStudentById/:id', (req, res) => {
-    mysqlConn.query('SELECT * FROM student where id = ?', req.params.id, (err, rows) => {
-
-        if (!err) {
-            mysqlConn.commit(() => {
-                console.log(rows);
-                res.send(rows);
-            });
-        } else {
-            res.send("No record present", err);
-            console.log("No record present", err);
-        }
-    })
-});
-
-// --------------------------------------------------------------------------------------------------------
-
+//inserting data to database by registering
 app.post('/register',
 
     [
@@ -101,6 +85,7 @@ app.post('/register',
 
 // --------------------------------------------------------------------------------------------------------
 
+//signing in to database
 app.post('/login', (req, res) => {
 
     var newEmail = req.body.email;
@@ -124,6 +109,7 @@ app.post('/login', (req, res) => {
 
 // --------------------------------------------------------------------------------------------------------
 
+//getting all students from database
 app.get('/getAllStudents', (req, res) => {
     mysqlConn.query('SELECT * FROM student', (err, rows) => {
         if (!err) {
@@ -140,6 +126,25 @@ app.get('/getAllStudents', (req, res) => {
 
 // --------------------------------------------------------------------------------------------------------
 
+//getting student by id
+app.get('/getStudentById/:id', (req, res) => {
+    mysqlConn.query('SELECT * FROM student where id = ?', req.params.id, (err, rows) => {
+
+        if (!err) {
+            mysqlConn.commit(() => {
+                console.log(rows);
+                res.send(rows);
+            });
+        } else {
+            res.send("No record present", err);
+            console.log("No record present", err);
+        }
+    })
+});
+
+// --------------------------------------------------------------------------------------------------------
+
+//deleting student by id
 app.delete('/deleteStudentById/:id', (req, res) => {
     mysqlConn.query('DELETE FROM student WHERE id = ?', req.params.id, (err, rows) => {
         if (!err) {
@@ -156,6 +161,7 @@ app.delete('/deleteStudentById/:id', (req, res) => {
 
 // --------------------------------------------------------------------------------------------------------
 
+//server port no
 app.listen(port, () => {
     console.log(`server is running on port no ${port}`);
 });
