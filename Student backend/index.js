@@ -4,8 +4,6 @@ var app = express();
 var cors = require('cors');
 const { body, validationResult } = require('express-validator');
 
-// const { } = require('express-validator');
-
 const port = process.env.PORT || 4000;
 
 var router = express.Router();
@@ -33,10 +31,12 @@ app.get('/getStudentById/:id', (req, res) => {
     mysqlConn.query('SELECT * FROM student where id = ?', req.params.id, (err, rows) => {
 
         if (!err) {
-            res.send(rows)
-            console.log(rows);
+            mysqlConn.commit(() => {
+                console.log(rows);
+                res.send(rows);
+            });
         } else {
-            res.send("No record present", err)
+            res.send("No record present", err);
             console.log("No record present", err);
         }
     })
@@ -47,12 +47,18 @@ app.get('/getStudentById/:id', (req, res) => {
 app.post('/register',
 
     [
-        body('name').not().isEmpty().isLength({ min: 2 })
-            .withMessage('please enter valid name with min 2 characters'),
-        body('email').not().isEmpty().isEmail().trim().normalizeEmail().toLowerCase()
-            .withMessage('please enter valid email, should include @ sign and in lowercase'),
-        body('password').not().isEmpty().isLength({ min: 6 })
-            .withMessage('password should contain min 4 characters, 2 lowercase, 1 number, 1 symbol')
+        body('name').notEmpty().withMessage('name is necessary').isString().isAlpha().withMessage('name must be in alphabetical characters')
+            .isLength({ min: 2 }).withMessage('please enter valid name with min 2 characters'),
+        body('email').notEmpty().withMessage('email is necessary').isEmail().trim().normalizeEmail().toLowerCase()
+            .withMessage('please enter valid email, should include(@ , . ) sign'),
+        body('password').notEmpty().withMessage('password is necessary')
+            .isStrongPassword({
+                minLength: 8,
+                minUppercase: 1,
+                minLowercase: 1,
+                minSymbols: 1,
+                minNumbers: 1
+            }).withMessage('password should contain min 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 symbol')
     ],
 
     (req, res) => {
@@ -62,8 +68,8 @@ app.post('/register',
 
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log("validation errors present ", errors);
-            res.send(errors);
+            console.log("validation errors are present..please check your entered data\n", errors);
+            res.status(400).send(errors);
         }
         else {
             mysqlConn.query('SELECT * FROM student WHERE email = ?', req.body.email, (err, result) => {
@@ -71,7 +77,7 @@ app.post('/register',
                 if (result && result.length) {
 
                     res.status(400).send('This Email is already registered, Enter other email-id');
-                    console.log('This Email is already registered, Enter other email-id');
+                    console.log('This Email is already registered, Enter other email-id\n', err);
                 }
                 else {
 
@@ -80,12 +86,12 @@ app.post('/register',
                         (err, rows) => {
                             if (!err) {
                                 mysqlConn.commit(() => {
-                                    res.send(rows);
-                                    console.log("record inserted", rows);
+                                    res.status(200).send(rows);
+                                    console.log("record inserted\n", rows);
                                 });
                             } else {
-                                res.send(err);
-                                console.log("Error generated", err);
+                                res.status(400).send(err);
+                                console.log("Error generated\n", err);
                             }
                         });
                 }
@@ -106,11 +112,12 @@ app.post('/login', (req, res) => {
 
             if (result && result.length) {
 
-                res.send('Entered details are correct, login successful');
-                console.log("Entered details are correct, login successful", result);
+                res.status(200).send('Entered details are correct, login successful');
+                console.log("Entered details are correct, login successful\n", result);
             } else {
+
                 res.status(400).send({ message: 'Please enter correct login details' });
-                console.log({ message: "Please enter correct login details" }, err);
+                console.log({ message: "Please enter correct login details\n" }, err);
             }
         })
 });
@@ -120,8 +127,10 @@ app.post('/login', (req, res) => {
 app.get('/getAllStudents', (req, res) => {
     mysqlConn.query('SELECT * FROM student', (err, rows) => {
         if (!err) {
-            console.log(rows);
-            res.send(rows)
+            mysqlConn.commit(() => {
+                console.log(rows);
+                res.send(rows)
+            });
         } else {
             console.log(err);
             res.send(err)
@@ -158,3 +167,69 @@ app.listen(port, () => {
 // });
 
 // ------------------------------------------------------------------------------------------------------------------------
+
+
+// app.post('/login', (req, res) => {
+
+//     var newEmail = req.body.email;
+
+//     mysqlConn.query('SELECT * FROM student WHERE email = ?',
+//         [newEmail],
+//         (err, result) => {
+
+//             if (!(result && result.length)) {
+
+//                 res.status(400).send({ message: 'Please enter correct email' });
+//                 console.log({ message: "Please enter correct email" });
+//             } else {
+
+//                 console.log("Entered email is correct\n");
+//                 var newPassword = req.body.password;
+//                 mysqlConn.query('SELECT * FROM student WHERE password = ?',
+//                     [newPassword],
+//                     (er, ress) => {
+//                         if (!(ress && ress.length)) {
+
+//                             res.status(400).send('password is invalid');
+//                             console.log("password is invalid\n");
+//                         }
+//                         else {
+//                             res.status(200).send('password is correct\nEmail and password both are correct');
+//                             console.log("password is correct\nEmail and password both are correct");
+//                         }
+//                     });
+//             }
+//         })
+// });
+
+
+// ---------------------------------------------------------------------
+
+
+
+// app.post('/login', (req, res) => {
+
+//     var newEmail = req.body.email;
+//     var newPassword = req.body.password;
+
+//     mysqlConn.query('SELECT * FROM student WHERE email = ? AND password = ?',
+//         [newEmail, newPassword],
+//         (err, result) => {
+
+//             if (result.email != newEmail) {
+
+//                 res.status(400).send('Entered email is incorrect');
+//                 console.log("Entered email is incorrect\n", result);
+//             } else {
+
+//                 if (result.password != newPassword) {
+
+//                     res.status(400).send('Entered password is incorrect');
+//                     console.log("Entered password is incorrect\n", result);
+//                 } else {
+//                     res.status(200).send('Entered details are correct');
+//                     console.log("Entered details are correct\n", result);
+//                 }
+//             }
+//         })
+// });
