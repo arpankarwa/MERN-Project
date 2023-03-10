@@ -139,7 +139,7 @@ app.get('/getStudentById/:id', (req, res) => {
             res.send("No record present", err);
             console.log("No record present", err);
         }
-    })
+    });
 });
 
 // --------------------------------------------------------------------------------------------------------
@@ -167,6 +167,23 @@ app.listen(port, () => {
 });
 
 // ------------------------------------------------------------------------------------------------------------------------
+
+app.get('/getStudentByEmail/:email', (req, res) => {
+    mysqlConn.query('SELECT * FROM student where email = ?', req.params.email, (err, rows) => {
+
+        if (!err) {
+            mysqlConn.commit(() => {
+                console.log(rows);
+                res.send(rows);
+            });
+        } else {
+            res.send("No record present", err);
+            console.log("No record present", err);
+        }
+    });
+});
+
+// ----------------------------------------------------------------------------------------------------
 
 // app.get('/logout', (req, res) => {
 //     res.redirect('/');
