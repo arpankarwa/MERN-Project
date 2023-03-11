@@ -4,11 +4,18 @@ var app = express();
 var cors = require('cors');
 const { body, validationResult } = require('express-validator');
 
+// const bodyParser = require('body-parser');
+// const cookieParser = require('cookie-parser');
+// const session = require('express-session');
+
+
+
 const port = process.env.PORT || 4000;
 
 var router = express.Router();
 app.use(express.json());
 app.use(cors());
+
 
 const mysqlConn = mysql.createConnection({
     host: 'localhost',
@@ -187,72 +194,4 @@ app.get('/getStudentByEmail/:email', (req, res) => {
 
 // app.get('/logout', (req, res) => {
 //     res.redirect('/');
-// });
-
-// ------------------------------------------------------------------------------------------------------------------------
-
-
-// app.post('/login', (req, res) => {
-
-//     var newEmail = req.body.email;
-
-//     mysqlConn.query('SELECT * FROM student WHERE email = ?',
-//         [newEmail],
-//         (err, result) => {
-
-//             if (!(result && result.length)) {
-
-//                 res.status(400).send({ message: 'Please enter correct email' });
-//                 console.log({ message: "Please enter correct email" });
-//             } else {
-
-//                 console.log("Entered email is correct\n");
-//                 var newPassword = req.body.password;
-//                 mysqlConn.query('SELECT * FROM student WHERE password = ?',
-//                     [newPassword],
-//                     (er, ress) => {
-//                         if (!(ress && ress.length)) {
-
-//                             res.status(400).send('password is invalid');
-//                             console.log("password is invalid\n");
-//                         }
-//                         else {
-//                             res.status(200).send('password is correct\nEmail and password both are correct');
-//                             console.log("password is correct\nEmail and password both are correct");
-//                         }
-//                     });
-//             }
-//         })
-// });
-
-
-// ---------------------------------------------------------------------
-
-
-
-// app.post('/login', (req, res) => {
-
-//     var newEmail = req.body.email;
-//     var newPassword = req.body.password;
-
-//     mysqlConn.query('SELECT * FROM student WHERE email = ? AND password = ?',
-//         [newEmail, newPassword],
-//         (err, result) => {
-
-//             if (result.email != newEmail) {
-
-//                 res.status(400).send('Entered email is incorrect');
-//                 console.log("Entered email is incorrect\n", result);
-//             } else {
-
-//                 if (result.password != newPassword) {
-
-//                     res.status(400).send('Entered password is incorrect');
-//                     console.log("Entered password is incorrect\n", result);
-//                 } else {
-//                     res.status(200).send('Entered details are correct');
-//                     console.log("Entered details are correct\n", result);
-//                 }
-//             }
-//         })
 // });
