@@ -28,11 +28,6 @@ export default function Register() {
 		})
 	}
 
-
-	// useEffect((e) => {
-	// 	onSubmit(e);
-	// }, []);
-
 	// ---------------------------------------------------------------------------
 
 	const [error, setError] = useState(false);

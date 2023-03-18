@@ -13,7 +13,6 @@ export default function Dashboard() {
 
   const getStudentDetails = async (email) => {
 
-    // e.preventDefault();
 
     await axios.get('http://localhost:4000/getAllStudents')
       .then((result) => {
@@ -29,7 +28,6 @@ export default function Dashboard() {
   }, []);
 
   const handleLogout = () => {
-    // e.preventDefault();
 
     // session storage manage
     if (sessionStorage.getItem("studentData")) {
@@ -37,7 +35,6 @@ export default function Dashboard() {
       navigateTo('/');
 
       Swal.fire('Student logged out..');
-      Swal.getPopup();
     }
     else {
       navigateTo('/');

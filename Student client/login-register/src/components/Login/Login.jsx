@@ -29,10 +29,6 @@ export default function Login() {
         })
     }
 
-    // useEffect(() => {
-    // handleLogin();
-    // }, []);
-
     const [error, setError] = useState(false);
 
     const handleLogin = async (e) => {
