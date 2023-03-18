@@ -9,7 +9,6 @@ const { body, validationResult } = require('express-validator');
 // const session = require('express-session');
 
 
-
 const port = process.env.PORT || 4000;
 
 var router = express.Router();
