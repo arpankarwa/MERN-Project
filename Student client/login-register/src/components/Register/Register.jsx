@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../CSS folder/style.css'
@@ -34,7 +34,6 @@ export default function Register() {
 	const onSubmit = async (e) => {
 
 		const { name, email, password } = student
-		// e.preventDefault();
 		if (e && e.preventDefault) {
 			e.preventDefault();
 		}

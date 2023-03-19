@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../CSS folder/style.css'
-
 import Swal from 'sweetalert2';
 
 export default function Login() {
@@ -32,8 +31,6 @@ export default function Login() {
     const [error, setError] = useState(false);
 
     const handleLogin = async (e) => {
-
-        // e.preventDefault();
 
         if (e && e.preventDefault) {
             e.preventDefault();
