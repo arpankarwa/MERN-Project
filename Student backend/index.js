@@ -4,10 +4,6 @@ var app = express();
 var cors = require('cors');
 const { body, validationResult } = require('express-validator');
 
-// const bodyParser = require('body-parser');
-// const cookieParser = require('cookie-parser');
-// const session = require('express-session');
-
 
 const port = process.env.PORT || 4000;
 
