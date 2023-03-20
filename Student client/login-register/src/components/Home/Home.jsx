@@ -15,7 +15,7 @@ export default function Home() {
     <>
       <div className="wrapper">
         <div className="inner">
-          <form action="">
+          <form>
             <h3>Home Page</h3>
             <p><b>Home Page for Student</b></p>
 
